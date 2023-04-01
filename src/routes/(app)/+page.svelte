@@ -7,9 +7,13 @@
 </svelte:head>
 
 <main>
-	<h1>Welcome to our project!</h1>
+	<hgroup id="titles">
+		<h1>Welcome to our project!</h1>
+		<h2>Built for Axxess Hacakathon 2023 project.</h2>
+	</hgroup>
 </main>
 
+<!-- Feel free to look through https://picocss.com/docs/typography.html for CSS styling (since it's already imported). -->
 <style lang="scss">
 	:global(body),
 	:global(html) {
@@ -18,6 +22,13 @@
 	}
 
 	main {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+
+	#titles {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
