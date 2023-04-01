@@ -13,3 +13,4 @@ vite.config.ts.timestamp-*
 .vs/slnx.sqlite
 .vs/VSWorkspaceState.json
 .vs/AxxessHack-2023/v16/.suo
+__pycache__
