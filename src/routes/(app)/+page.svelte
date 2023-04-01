@@ -3,7 +3,6 @@
 
 <svelte:head>
 	<title>Homepage</title>
-	<link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.*/css/pico.min.css" />
 </svelte:head>
 
 <main>
@@ -15,17 +14,14 @@
 
 <!-- Feel free to look through https://picocss.com/docs/typography.html for CSS styling (since it's already imported). -->
 <style lang="scss">
-	:global(body),
-	:global(html) {
-		margin: 0;
-		padding: 0;
-	}
-
 	main {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
+		animation: fade 1.5s;
+		width: 100svw;
+		height: 100svh;
 	}
 
 	#titles {
@@ -33,5 +29,14 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
+	}
+
+	@keyframes fade {
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 1;
+		}
 	}
 </style>
