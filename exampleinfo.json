@@ -1,0 +1,28 @@
+{
+	"allergens": [
+
+	],
+	"blood-type": "",
+	"date-of-birth": "",
+	"first-name": "",
+	"last-name": "",
+	"medications": [
+
+	],
+	"emergency-contacts": [
+		{
+			"name": "",
+			"phone": "",
+			"relationship": ""
+		}
+	],
+	"conditions": [
+
+	],
+	"insurance": "",
+	"insurance-number": "",
+	"primary-care-physician": {
+		"name": "",
+		"phone": ""
+	}
+}

@@ -1,0 +1,29 @@
+{
+	"allergens": [
+		"peanuts",
+		"walnuts"
+	],
+	"blood-type": "AB+",
+	"date-of-birth": "12/25/2002",
+	"first-name": "Nicholas",
+	"last-name": "Zolton",
+	"medications": [
+		"Advil"
+	],
+	"emergency-contacts": [
+		{
+			"name": "Abby Smith",
+			"phone": "1234567890",
+			"relationship": "Partner"
+		}
+	],
+	"conditions": [
+		"Migraines"
+	],
+	"insurance": "Aetna",
+	"insurance-number": "12345",
+	"primary-care-physician": {
+		"name": "George Washington",
+		"phone": "1234567890"
+	}
+}
