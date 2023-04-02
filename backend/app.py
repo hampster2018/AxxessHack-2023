@@ -2,42 +2,80 @@ import os
 import csv
 from flask import Flask, request
 from dotenv import load_dotenv
+import openai
 load_dotenv()
 
 app = Flask(__name__)
+
+drug_list = [
+    'Abilify Maintena'
+]
+
+full_drug_list = []
+
+input_file = 'finaldrugs2.csv'
+
+
+@app.route("/getmydrugs", methods=['GET'])
+def getMyDrugs():
+    if request.method == 'GET':
+        return drug_list
+    return "error"
+
+
+@app.route('/addmydrug', methods=['POST'])
+def addMyDrug():
+    drug = request.form['drug']
+    if drug not in drug_list:
+        drug_list.append(drug)
+    return f"{drug} added to drug list."
 
 
 @app.route("/summary", methods=['GET'])
 def getSummary():
     if request.method == 'GET':
         params = request.args
+        print('Getting information for: ' + params['drug'])
+        return prompt_chatbot(generate_prompt(params['drug'], getDrug(params['drug'])))['content']
+    return "error"
+
+
+@app.route('/fulldrug', methods=['GET'])
+def getFullDrug():
+    if request.method == 'GET':
+        params = request.args
         os.getenv('OPENAI_APIKEY')
         print(params['drug'])
         return getDrug(params['drug'])
-    return "<p>error</p>"
+    return "error"
 
 
 def generate_prompt(drug_name, drug_info):
     # this will basically grab the drug info and then generate a prompt with it so that the chatbot can use
     # it to answer questions
     return """
-    The following is a conversation with a doctor about a patient's prescription. The doctor is you.
-    Patient: I have a prescription for a drug called {}, here is the information about the drug: {}.
-    Patient: Could you please answer some questions about the drug for me? Doctor: Sure, what would you like to know?
-    Patient: What is a summary of the side effects? 
-    """.format(drug_name, drug_info)
+	The drug's name is {}. Here are the side effects: {}.
+	""".format(drug_name, drug_info)
 
 
 def prompt_chatbot(prompt):
-    # this will take the prompt and then use the chatbot to generate a response
-    # this will return a string of the response
-    return "This is the response"
+    openai.organization = os.getenv('OPENAI_ORG')
+    openai.api_key = os.getenv('OPENAI_API_KEY')
+    completion = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant. Given the following description of the side effects of this drug, please provide a concise summary of the most important information."},
+            {"role": "user", "content": prompt}
+        ],
+        max_tokens=2048,
+        temperature=0.7,
+    )
+    return completion.choices[0].message
 
 
 def getDrug(drug):
-    file = open('simplified_drugs.csv')
+    file = open(input_file)
     csvreader = csv.reader(file)
-    header = next(csvreader)
 
     rows = []
     for r in csvreader:
@@ -53,35 +91,22 @@ def getDrug(drug):
             info = drugInfo
             break
 
-    return header, info
+    return info[1]
 
-# @app.route("/", methods=['POST'])
-# def getData():
-#     # info needed by hospital/doctor
-#     hospInfo = ["f_name", "mi", "l_name", "dob", "phone_num",
-#                 "ss", "address", "city", "state", "zip", "sex"]
 
-#     # get the info from the client
-#     if request.method == 'POST':
-#         f_name = request.form.get('f_name')
-#         mi = request.form.get('MI')
-#         l_name = request.form.get('l_name')
-#         dob = request.form.get('dob')
-#         phone_num = request.form.get('phone_num')
-#         ss = request.form.get('SS')
-#         address = request.form.get('address')
-#         city = request.form.get('city')
-#         state = request.form.get('state')
-#         zip = request.form.get('zip')
-#         sex = request.form.get('sex')
+@app.route('/druglist', methods=['GET'])
+def getDrugList():
+    if request.method == 'GET':
+        if len(full_drug_list) == 0:
+            return drugList()
+        else:
+            return full_drug_list
+    return "error"
 
-#     clientInfo = [f_name, mi, l_name, dob, phone_num,
-#                   ss, address, city, state, zip, sex]
 
-#     # information not provided by client but still needed by hospital
-#     infoNeeded = []
-
-#     # check that hospital has all of the info they need
-#     for item in hospInfo:
-#         if item not in clientInfo.keys():
-#             infoNeeded.append(item)
+def drugList():
+    with open(input_file, 'r') as f:
+        reader = csv.reader(f)
+        first_column = [row[0] for row in reader]
+        full_drug_list = first_column[1:]
+    return full_drug_list
