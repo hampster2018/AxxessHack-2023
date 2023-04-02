@@ -16,6 +16,16 @@ full_drug_list = []
 input_file = 'finaldrugs2.csv'
 
 
+@app.route('/deletemydrug', methods=['DELETE'])
+def delete_drug():
+    drug = request.form['drug']
+    if drug in drug_list:
+        drug_list.remove(drug)
+        return f"{drug} removed from drug list."
+    else:
+        return f"{drug} not found in drug list."
+
+
 @app.route("/getmydrugs", methods=['GET'])
 def getMyDrugs():
     if request.method == 'GET':
