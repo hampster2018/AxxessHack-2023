@@ -14,7 +14,40 @@ drug_list = [
 full_drug_list = []
 
 input_file = 'finaldrugs2.csv'
+userInfo = {
+    "f_name" : "",
+    "l_name" : "",
+    "sex" : "",
+    "dob" : "",
+    "weight" : "",
+    "height" : "",
+    "insurance" : "",
+    "bloodtype" : ""
+}
+meds = {
+        "Abilify Maintena" : {
+            "M" : ["12:00", "18:00"],
+            "F" : ["12:00", "18:00"]
+        }
+    }
 
+@app.route('/make-user-info', methods=['POST'])
+def makeProfile():
+    if request.method == 'POST':
+        userInfo["f_name"] = request.form.get('f_name')
+        userInfo["l_name"] = request.form.get('l_name')
+        userInfo["dob"] = request.form.get('dob')
+        userInfo["sex"] = request.form.get('sex')
+        userInfo["insurance"] = request.form.get('insurance')
+        userInfo["bloodtype"] = request.form.get('bloodtype')
+        userInfo["height"] = request.form.get('height')
+        userInfo["weight"] = request.form.get('weight')
+        return "success"
+
+@app.route('/user-info', methods=['GET'])
+def getProfile():
+    if request.method == 'GET':
+        return userInfo
 
 @app.route('/deletemydrug', methods=['DELETE'])
 def delete_drug():
